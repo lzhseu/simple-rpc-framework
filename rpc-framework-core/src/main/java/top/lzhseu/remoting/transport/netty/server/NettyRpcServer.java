@@ -44,7 +44,7 @@ public class NettyRpcServer {
                     // 启动 TCP_NODELAY，就意味着禁用了 Nagle 算法，允许小包的发送。
                     // 对于延时敏感型，同时数据传输量比较小的应用，开启 TCP_NODELAY 选项无疑是一个正确的选择。
                     .childOption(ChannelOption.TCP_NODELAY, true)
-                    // 是否开启 TCP 底层心跳机制
+                    // 是否开启 TCP 底层心跳机制，我们在应用层已经有实现心跳机制了，这里不配置完全没问题
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
                     // 表示系统用于临时存放已完成三次握手的请求的队列的最大长度，
                     // 如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数
