@@ -50,7 +50,7 @@ public class ServiceProviderImpl implements ServiceProvider {
 
     @Override
     public void addService(Object service, Class<?> serviceClass, RpcServiceProperties properties) {
-        properties.setServiceName(serviceClass.getCanonicalName());
+        properties.setInterfaceName(serviceClass.getCanonicalName());
         String rpcServiceName = properties.toRpcServiceName();
         if (serviceMap.containsKey(rpcServiceName)) {
             return;

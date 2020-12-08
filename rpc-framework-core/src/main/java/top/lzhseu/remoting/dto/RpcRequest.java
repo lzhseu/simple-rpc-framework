@@ -61,6 +61,6 @@ public class RpcRequest implements Serializable {
         return RpcServiceProperties.builder()
                 .group(group)
                 .version(version)
-                .serviceName(interfaceName).build();
+                .interfaceName(interfaceName).build();
     }
 }

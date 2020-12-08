@@ -1,7 +1,11 @@
 package top.lzhseu.test.server;
 
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import top.lzhseu.entity.RpcServiceProperties;
 import top.lzhseu.remoting.transport.netty.server.NettyRpcServer;
+import top.lzhseu.spring.SpringConfiguration;
 import top.lzhseu.test.server.serviceImpl.HelloServiceImpl;
 import top.lzhseu.test.service.HelloService;
 
@@ -12,7 +16,10 @@ import top.lzhseu.test.service.HelloService;
 public class NettyRpcServerTest {
 
     public static void main(String[] args) {
-        NettyRpcServer server = new NettyRpcServer();
+
+        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+
+        NettyRpcServer server = (NettyRpcServer) context.getBean("nettyRpcServer");
 
         // 注册服务
         HelloService helloService1 = new HelloServiceImpl();
@@ -22,4 +29,5 @@ public class NettyRpcServerTest {
         // 开启服务器
         server.start();
     }
+
 }

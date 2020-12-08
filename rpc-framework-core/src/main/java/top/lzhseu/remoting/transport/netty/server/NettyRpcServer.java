@@ -9,6 +9,7 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import top.lzhseu.config.ServerShutdownHook;
 import top.lzhseu.entity.RpcServiceProperties;
 import top.lzhseu.provider.ServiceProvider;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author lzh
  * @date 2020/12/6 20:30
  */
+@Component
 @Slf4j
 public class NettyRpcServer {
 

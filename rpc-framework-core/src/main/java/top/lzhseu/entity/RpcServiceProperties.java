@@ -31,14 +31,14 @@ public class RpcServiceProperties {
     /**
      * 服务，即接口名
      */
-    private String serviceName;
+    private String interfaceName;
 
     /**
      * 生成 RPC 服务名称
      * @return RPC 服务名称
      */
     public String toRpcServiceName() {
-        return serviceName + "#" + group + "#" + version;
+        return interfaceName + "#" + group + "#" + version;
     }
 
 }

@@ -3,12 +3,16 @@ package top.lzhseu.test.client;
 import org.junit.Assert;
 import org.junit.Assert.*;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import top.lzhseu.annotation.RpcReference;
 import top.lzhseu.entity.RpcServiceProperties;
 import top.lzhseu.proxy.RpcClientProxy;
 import top.lzhseu.remoting.dto.RpcRequest;
 import top.lzhseu.remoting.dto.RpcResponse;
 import top.lzhseu.remoting.transport.RpcRequestTransport;
 import top.lzhseu.remoting.transport.netty.client.NettyRpcClient;
+import top.lzhseu.spring.SpringConfiguration;
 import top.lzhseu.test.service.Hello;
 import top.lzhseu.test.service.HelloService;
 
@@ -53,5 +57,12 @@ public class NettyRpcClientTest {
         HelloService helloService = proxy.getProxy(HelloService.class);
         String s = helloService.sayHello(new Hello("lzh", "Good evening"));
         System.out.println(s);
+    }
+
+    @Test
+    public void testNettyRpcClientWithAnno() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+        HelloController helloController = (HelloController) context.getBean("helloController");
+        helloController.test();
     }
 }
