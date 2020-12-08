@@ -102,6 +102,7 @@ public final class CuratorUtil {
      * @return 该服务名称下的所有子节点，即提供该服务的所有服务地址
      */
     public static List<String> getChildrenNodes(CuratorFramework zkClient, String rpcServiceName) {
+
         if (SERVICE_ADDRESS_MAP.containsKey(rpcServiceName)) {
             return SERVICE_ADDRESS_MAP.get(rpcServiceName);
         }
@@ -114,6 +115,8 @@ public final class CuratorUtil {
                 result = zkClient.getChildren().forPath(servicePath);
                 SERVICE_ADDRESS_MAP.put(rpcServiceName, result);
 
+                // 注册监视器，当此服务节点变动时，及时更新本地缓存
+                registerWatcher(zkClient, rpcServiceName);
 
             } else {
                 log.info("[zookeeper:] path [{}] not existed", servicePath);

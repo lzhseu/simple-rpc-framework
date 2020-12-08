@@ -11,6 +11,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import top.lzhseu.enums.CompressTypeEnum;
 import top.lzhseu.enums.SerializationTypeEnum;
+import top.lzhseu.extension.ExtensionLoader;
+import top.lzhseu.registry.ServiceDiscovery;
 import top.lzhseu.remoting.constant.RpcConstant;
 import top.lzhseu.remoting.dto.RpcMessage;
 import top.lzhseu.remoting.dto.RpcRequest;
@@ -20,9 +22,7 @@ import top.lzhseu.remoting.transport.netty.client.handler.HeartbeatClientHandler
 import top.lzhseu.remoting.transport.netty.client.handler.NettyRpcClientHandler;
 import top.lzhseu.remoting.transport.netty.codec.RpcMessageCodec;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +37,7 @@ public class NettyRpcClient implements RpcRequestTransport {
     private final EventLoopGroup eventLoopGroup;
     private final ChannelProvider channelProvider;
     private final UnprocessedRequests unprocessedRequests;
+    private final ServiceDiscovery serviceDiscovery;
 
     public NettyRpcClient() {
         eventLoopGroup = new NioEventLoopGroup();
@@ -58,6 +59,7 @@ public class NettyRpcClient implements RpcRequestTransport {
                 });
         channelProvider = ChannelProvider.getInstance();
         unprocessedRequests = UnprocessedRequests.getInstance();
+        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
     }
 
     /**
@@ -101,13 +103,8 @@ public class NettyRpcClient implements RpcRequestTransport {
         // 返回值 Future
         CompletableFuture<RpcResponse<Object>> completableFuture = new CompletableFuture<>();
 
-        // TODO: 找到远程服务的地址，发起请求
-        InetSocketAddress remoteAddress = null;
-        try {
-            remoteAddress = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), 9999);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        // 找到远程服务的地址，发起请求
+        InetSocketAddress remoteAddress = serviceDiscovery.lookupService(rpcRequest.toRpcServiceProperties().toRpcServiceName());
 
         // 拿到连接的 channel
         Channel channel = getChannel(remoteAddress);

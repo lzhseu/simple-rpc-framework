@@ -1,5 +1,7 @@
 package top.lzhseu.registry;
 
+import top.lzhseu.extension.SPI;
+
 import java.net.InetSocketAddress;
 
 /**
@@ -8,6 +10,7 @@ import java.net.InetSocketAddress;
  * @author lzh
  * @date 2020/12/7 15:58
  */
+@SPI
 public interface ServiceDiscovery {
 
     /**

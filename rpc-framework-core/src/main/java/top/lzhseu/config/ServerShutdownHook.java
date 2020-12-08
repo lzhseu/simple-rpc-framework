@@ -19,9 +19,12 @@ public class ServerShutdownHook {
         log.info("config server shutdown hook");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
+                log.info("invoke shutdown hook...");
                 // 清理注册中心的服务
                 InetSocketAddress address = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), NettyRpcServer.PORT);
                 CuratorUtil.clearRegistry(CuratorUtil.getZkClient(), address);
+
+                log.info("THE END");
             } catch (UnknownHostException ignored) {
             }
         }));
