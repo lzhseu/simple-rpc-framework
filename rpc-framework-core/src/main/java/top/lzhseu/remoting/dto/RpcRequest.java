@@ -1,6 +1,7 @@
 package top.lzhseu.remoting.dto;
 
 import lombok.*;
+import top.lzhseu.entity.RpcServiceProperties;
 
 import java.io.Serializable;
 
@@ -54,4 +55,12 @@ public class RpcRequest implements Serializable {
      * 不同实现类有一个唯一标识
      */
     private String group;
+
+
+    public RpcServiceProperties toRpcServiceProperties() {
+        return RpcServiceProperties.builder()
+                .group(group)
+                .version(version)
+                .serviceName(interfaceName).build();
+    }
 }

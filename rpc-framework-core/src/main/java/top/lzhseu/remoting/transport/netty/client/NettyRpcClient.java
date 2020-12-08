@@ -101,7 +101,7 @@ public class NettyRpcClient implements RpcRequestTransport {
         // 返回值 Future
         CompletableFuture<RpcResponse<Object>> completableFuture = new CompletableFuture<>();
 
-        // 找到远程服务的地址
+        // TODO: 找到远程服务的地址，发起请求
         InetSocketAddress remoteAddress = null;
         try {
             remoteAddress = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), 9999);
@@ -146,11 +146,4 @@ public class NettyRpcClient implements RpcRequestTransport {
         eventLoopGroup.shutdownGracefully();
     }
 
-    public static void main(String[] args) throws UnknownHostException {
-        NettyRpcClient client = new NettyRpcClient();
-        Channel channel = client.getChannel(new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), 9999));
-        RpcRequest rpcRequest = RpcRequest.builder()
-                .interfaceName("aaa").methodName("bbb").requestId("123").build();
-        client.sendRpcRequest(rpcRequest);
-    }
 }

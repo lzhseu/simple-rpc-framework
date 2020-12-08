@@ -1,10 +1,12 @@
 package top.lzhseu.test.serialize;
 
 import org.junit.jupiter.api.Test;
+import top.lzhseu.registry.zk.ZkServiceDiscovery;
 import top.lzhseu.remoting.dto.RpcRequest;
 import top.lzhseu.serialize.kryo.KryoSerializer;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
 /**
@@ -39,6 +41,13 @@ public class KryoSerializerTest {
         System.out.println();
         String newStr = kryoSerializer.deserialize(bytes, String.class);
         System.out.println("反序列化后的结果："  + newStr);
+    }
+
+    @Test
+    public void test() {
+        System.out.println(ZkServiceDiscovery.class.getCanonicalName());
+        System.out.println(ZkServiceDiscovery.class.getName());
+        System.out.println(ZkServiceDiscovery.class.getSimpleName());
     }
 
 }

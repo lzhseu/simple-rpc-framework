@@ -9,6 +9,10 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import top.lzhseu.config.ServerShutdownHook;
+import top.lzhseu.entity.RpcServiceProperties;
+import top.lzhseu.provider.ServiceProvider;
+import top.lzhseu.provider.impl.ServiceProviderImpl;
 import top.lzhseu.remoting.transport.netty.codec.RpcMessageCodec;
 import top.lzhseu.remoting.transport.netty.server.handler.HeartBearServerHandler;
 import top.lzhseu.remoting.transport.netty.server.handler.NettyRpcServerHandler;
@@ -26,12 +30,31 @@ public class NettyRpcServer {
     /**
      * TODO: 端口应该可配置
      */
-    public static final int port = 9999;
+    public static final int PORT = 9999;
 
+    private final ServiceProvider serviceProvider = ServiceProviderImpl.getInstance();
+
+    /**
+     * 注册服务
+     * @param service 服务对象
+     * @param properties 服务对象的属性，或者说注册到注册中心的服务属性
+     */
+    public void registerService(Object service, RpcServiceProperties properties) {
+        serviceProvider.publishService(service, properties);
+    }
+
+    public void registerService(Object service, Class<?> serviceClass, RpcServiceProperties properties) {
+        serviceProvider.publishService(service, serviceClass, properties);
+    }
+
+    /**
+     * 启动服务器
+     */
     @SneakyThrows
     public void start() {
 
-        // TODO: 配置钩子，当服务器关闭获取 JVM 退出时
+        // 配置钩子，当服务器关闭或者 JVM 退出时，做一些清理工作
+        ServerShutdownHook.clearAll();
 
         String host = InetAddress.getLocalHost().getHostAddress();
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -61,7 +84,7 @@ public class NettyRpcServer {
                         }
                     });
 
-            ChannelFuture f = bootstrap.bind(host, port).sync();
+            ChannelFuture f = bootstrap.bind(host, PORT).sync();
             f.channel().closeFuture().sync();
         } catch (Exception e) {
             log.error("occur exception when start server:", e);
@@ -72,7 +95,4 @@ public class NettyRpcServer {
         }
     }
 
-    public static void main(String[] args) {
-        new NettyRpcServer().start();
-    }
 }

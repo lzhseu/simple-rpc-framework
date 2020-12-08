@@ -6,8 +6,9 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
 import top.lzhseu.compress.Compress;
 import top.lzhseu.enums.CompressTypeEnum;
+import top.lzhseu.enums.RpcErrorEnum;
 import top.lzhseu.enums.SerializationTypeEnum;
-import top.lzhseu.exception.RpcProtocalException;
+import top.lzhseu.exception.RpcProtocolException;
 import top.lzhseu.extension.ExtensionLoader;
 import top.lzhseu.remoting.constant.RpcConstant;
 import top.lzhseu.remoting.dto.RpcMessage;
@@ -72,13 +73,13 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         byte[] magicBytes = new byte[RpcConstant.MAGIC_NUMBER.length];
         frame.readBytes(magicBytes);
         if (!Arrays.equals(magicBytes, RpcConstant.MAGIC_NUMBER)) {
-            throw new RpcProtocalException("Unknown magic code: " + Arrays.toString(magicBytes));
+            throw new RpcProtocolException(RpcErrorEnum.UNKNOWN_MAGIC_NUMBER_EXCEPTION, Arrays.toString(magicBytes));
         }
 
         // 校对版本号
         byte version = frame.readByte();
         if (version != RpcConstant.VERSION) {
-            throw new RpcProtocalException("version is not compatible" + version);
+            throw new RpcProtocolException(RpcErrorEnum.PROTOCOL_VERSION_ERROR_EXCEPTION, String.valueOf(version));
         }
 
         // 根据协议解码

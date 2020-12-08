@@ -11,6 +11,7 @@ import top.lzhseu.remoting.constant.RpcConstant;
 import top.lzhseu.remoting.dto.RpcMessage;
 import top.lzhseu.remoting.dto.RpcRequest;
 import top.lzhseu.remoting.dto.RpcResponse;
+import top.lzhseu.remoting.handler.RpcServiceHandler;
 
 /**
  * 服务端端 handler，用于处理从客户端接收到的数据
@@ -20,6 +21,8 @@ import top.lzhseu.remoting.dto.RpcResponse;
  */
 @Slf4j
 public class NettyRpcServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
+
+    private final RpcServiceHandler rpcServiceHandler = RpcServiceHandler.getInstance();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcMessage msg) throws Exception {
@@ -33,8 +36,9 @@ public class NettyRpcServerHandler extends SimpleChannelInboundHandler<RpcMessag
             // 拿出 RpcRequest
             RpcRequest rpcRequest = (RpcRequest) msg.getData();
 
-            // TODO: 解析请求，找到目标服务，并得到执行结果
-            Object result = null;
+            // 解析请求，找到目标服务，并得到执行结果
+            Object result = rpcServiceHandler.handle(rpcRequest);
+            log.info("server get result: {}", result.toString());
 
             // 封装消息，并发送
             // TODO: 序列化、压缩方式等写死，之后考虑通过配置文件来配置

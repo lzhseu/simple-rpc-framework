@@ -1,0 +1,2 @@
+random=top.lzhseu.loadbalance.impl.RandomLoadBalance
+consistent-hash=top.lzhseu.loadbalance.impl.ConsistentHashLoadBalance
