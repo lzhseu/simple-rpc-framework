@@ -11,6 +11,9 @@
     <modules>
         <module>rpc-framework-core</module>
         <module>rpc-framework-common</module>
+        <module>example-service-api</module>
+        <module>example-server</module>
+        <module>example-client</module>
     </modules>
 
     <properties>

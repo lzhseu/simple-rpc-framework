@@ -14,7 +14,6 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Component
 public @interface RpcService {
 
     String group() default RpcServiceProperties.DEFAULT_GROUP;
